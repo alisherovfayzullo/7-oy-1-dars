@@ -1,13 +1,30 @@
-import { createContext } from "react";
+import { createContext, useReducer } from "react";
 
-export const MainContext = createContext();
+export const contextProvider = createContext();
 
-function MainContextProvider({ children }) {
+const initialState = {
+  theme: "light",
+};
+
+const reducer = function (state, action) {
+  switch (action.type) {
+    case "CHANGE_TITLE":
+      return { ...state, title: action.payload };
+    case "CHANGE_THEME":
+      return { ...state, theme: state.theme === "dark" ? "light" : "dark" };
+    default:
+      return state;
+  }
+};
+
+function MainContext({ children }) {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
   return (
-    <MainContext.Provider value={"fayzullo alisherov"}>
+    <contextProvider.Provider value={{ state, dispatch }}>
       {children}
-    </MainContext.Provider>
+    </contextProvider.Provider>
   );
 }
 
-export default MainContextProvider;
+export default MainContext;
